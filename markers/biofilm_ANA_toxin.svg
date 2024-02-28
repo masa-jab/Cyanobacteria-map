@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="46.059895mm"
+   height="46.059895mm"
+   viewBox="0 0 46.059895 46.059895"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1 (c68e22c387, 2021-05-23)"
+   sodipodi:docname="biofilm_ANA_toxin.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="3.1108586"
+     inkscape:cx="105.75858"
+     inkscape:cy="109.77677"
+     inkscape:window-width="1920"
+     inkscape:window-height="1137"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2" />
+  <g
+     inkscape:label="Plast 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(11.229184,10.293616)">
+    <path
+       id="rect1130"
+       style="opacity:1;fill:#ffd92f;fill-opacity:1;stroke:#000000;stroke-width:7.55906;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 15.037109,-0.76171875 -0.76171875,15.037109 65.136719,80.935547 -0.76171875,146.83398 15.037109,162.63281 80.935547,96.734375 146.83398,162.63281 162.63281,146.83398 96.734375,80.935547 162.63281,15.037109 146.83398,-0.76171875 80.935547,65.136719 Z"
+       transform="matrix(0.26458333,0,0,0.26458333,-9.6134326,-8.6778647)" />
+  </g>
+</svg>

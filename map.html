@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/filter.css">
+<link rel="stylesheet" href="css/nouislider.min.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title>Cyanotoxins and cyanotoxin genes in Alpine waterbodies</title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/tailDT.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/wNumb.js"></script>
+        <script src="data/Cyanotoxingenes_2.js"></script>
+        <script src="data/Cyanotoxins_3.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[44.863926357446175,8.15251190993444],[48.581047881474646,17.01762539336431]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        map.createPane('pane_ESRIGraylight_0');
+        map.getPane('pane_ESRIGraylight_0').style.zIndex = 400;
+        var layer_ESRIGraylight_0 = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRIGraylight_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRIGraylight_0;
+        map.addLayer(layer_ESRIGraylight_0);
+        map.createPane('pane_ESRITopo_1');
+        map.getPane('pane_ESRITopo_1').style.zIndex = 401;
+        var layer_ESRITopo_1 = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+            pane: 'pane_ESRITopo_1',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        layer_ESRITopo_1;
+        map.addLayer(layer_ESRITopo_1);
+        function pop_Cyanotoxingenes_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Water body</th>\
+                        <td>' + (feature.properties['Water body'] !== null ? autolinker.link(feature.properties['Water body'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Country</th>\
+                        <td>' + (feature.properties['Country'] !== null ? autolinker.link(feature.properties['Country'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Water body type</th>\
+                        <td>' + (feature.properties['Water body type'] !== null ? autolinker.link(feature.properties['Water body type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sampling station</th>\
+                        <td>' + (feature.properties['Sampling station'] !== null ? autolinker.link(feature.properties['Sampling station'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Latitude</th>\
+                        <td>' + (feature.properties['Latitude'] !== null ? autolinker.link(feature.properties['Latitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Longitude</th>\
+                        <td>' + (feature.properties['Longitude'] !== null ? autolinker.link(feature.properties['Longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sample type</th>\
+                        <td>' + (feature.properties['Sample type'] !== null ? autolinker.link(feature.properties['Sample type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cyanotoxin genes</th>\
+                        <td>' + (feature.properties['Cyanotoxin genes'] !== null ? autolinker.link(feature.properties['Cyanotoxin genes'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+        function style_Cyanotoxingenes_2_0(feature) {
+            var context = {
+                feature: feature,
+                variables: {}
+            };
+            // Start of if blocks and style check logic
+            if (exp_Cyanotoxingenes_2rule0_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_MC.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule1_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_ANA.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule2_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_CYN.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule3_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_none.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule4_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_MC.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule5_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_ANA.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule6_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_CYN.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxingenes_2rule7_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxingenes_2',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_none.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+            else {
+                return {fill: false, stroke: false};
+            }
+        }
+        map.createPane('pane_Cyanotoxingenes_2');
+        map.getPane('pane_Cyanotoxingenes_2').style.zIndex = 402;
+        map.getPane('pane_Cyanotoxingenes_2').style['mix-blend-mode'] = 'normal';
+        var layer_Cyanotoxingenes_2 = new L.geoJson(json_Cyanotoxingenes_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Cyanotoxingenes_2',
+            layerName: 'layer_Cyanotoxingenes_2',
+            pane: 'pane_Cyanotoxingenes_2',
+            onEachFeature: pop_Cyanotoxingenes_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Cyanotoxingenes_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Cyanotoxingenes_2);
+        map.addLayer(layer_Cyanotoxingenes_2);
+        function pop_Cyanotoxins_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">Water body</th>\
+                        <td>' + (feature.properties['Water body'] !== null ? autolinker.link(feature.properties['Water body'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Country</th>\
+                        <td>' + (feature.properties['Country'] !== null ? autolinker.link(feature.properties['Country'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Water body type</th>\
+                        <td>' + (feature.properties['Water body type'] !== null ? autolinker.link(feature.properties['Water body type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sampling station</th>\
+                        <td>' + (feature.properties['Sampling station'] !== null ? autolinker.link(feature.properties['Sampling station'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Latitude</th>\
+                        <td>' + (feature.properties['Latitude'] !== null ? autolinker.link(feature.properties['Latitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Longitude</th>\
+                        <td>' + (feature.properties['Longitude'] !== null ? autolinker.link(feature.properties['Longitude'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Sample type</th>\
+                        <td>' + (feature.properties['Sample type'] !== null ? autolinker.link(feature.properties['Sample type'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Cyanotoxins</th>\
+                        <td>' + (feature.properties['Cyanotoxins'] !== null ? autolinker.link(feature.properties['Cyanotoxins'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+        function style_Cyanotoxins_3_0(feature) {
+            var context = {
+                feature: feature,
+                variables: {}
+            };
+            // Start of if blocks and style check logic
+            if (exp_Cyanotoxins_3rule0_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_MC_toxin.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxins_3rule1_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_ANA_toxin.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxins_3rule2_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/plankton_none_toxin.svg',
+            iconSize: [15.2, 15.2]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxins_3rule3_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_MC_toxin.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxins_3rule4_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_ANA_toxin.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+                else if (exp_Cyanotoxins_3rule5_eval_expression(context)) {
+                  return {
+                pane: 'pane_Cyanotoxins_3',
+        rotationAngle: 0.0,
+        rotationOrigin: 'center center',
+        icon: L.icon({
+            iconUrl: 'markers/biofilm_none_toxin.svg',
+            iconSize: [11.399999999999999, 11.399999999999999]
+        }),
+                interactive: true,
+            };
+                }
+            else {
+                return {fill: false, stroke: false};
+            }
+        }
+        map.createPane('pane_Cyanotoxins_3');
+        map.getPane('pane_Cyanotoxins_3').style.zIndex = 403;
+        map.getPane('pane_Cyanotoxins_3').style['mix-blend-mode'] = 'normal';
+        var layer_Cyanotoxins_3 = new L.geoJson(json_Cyanotoxins_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Cyanotoxins_3',
+            layerName: 'layer_Cyanotoxins_3',
+            pane: 'pane_Cyanotoxins_3',
+            onEachFeature: pop_Cyanotoxins_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.marker(latlng, style_Cyanotoxins_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Cyanotoxins_3);
+        map.addLayer(layer_Cyanotoxins_3);
+            var title = new L.Control();
+            title.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info');
+                this.update();
+                return this._div;
+            };
+            title.update = function () {
+                this._div.innerHTML = '<h2>Cyanotoxins and cyanotoxin genes in Alpine waterbodies</h2>';
+            };
+            title.addTo(map);
+            var abstract = new L.Control({'position':'bottomright'});
+            abstract.onAdd = function (map) {
+                this._div = L.DomUtil.create('div',
+                'leaflet-control abstract');
+                this._div.id = 'abstract'
+                    this._div.setAttribute("onmouseenter", "abstract.show()");
+                    this._div.setAttribute("onmouseleave", "abstract.hide()");
+                    this.hide();
+                    return this._div;
+                };
+                abstract.hide = function () {
+                    this._div.classList.remove("abstractUncollapsed");
+                    this._div.classList.add("abstract");
+                    this._div.innerHTML = 'i'
+                }
+                abstract.show = function () {
+                    this._div.classList.remove("abstract");
+                    this._div.classList.add("abstractUncollapsed");
+                    this._div.innerHTML = 'Distribution of cyanotoxins and cyanotoxin biosynthesis genes in Alpine region determined by LC-MS/MS and (q)PCR. Cyanotoxins and cyanotoxin genes are mapped on separate layers, and two basemaps are available (simple and relief). Results can be filtered by location, sample type, water body type, cyanotoxins and cyanotoxin genes. Note that cyanotoxin analyses were not performed on all sampling points.';
+            };
+            abstract.addTo(map);
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Cyanotoxins<br /><table><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_waterMC0.png" /></td><td>water MC</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_waterATX1.png" /></td><td>water ATX</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_waternone2.png" /></td><td>water none</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_biofilmMC3.png" /></td><td>biofilm MC</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_biofilmATX4.png" /></td><td>biofilm ATX</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxins_3_biofilmnone5.png" /></td><td>biofilm none</td></tr></table>': layer_Cyanotoxins_3,'Cyanotoxin genes<br /><table><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_watermcyE0.png" /></td><td>water mcyE</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_wateranaC1.png" /></td><td>water anaC</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_watercyrJ2.png" /></td><td>water cyrJ</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_waternone3.png" /></td><td>water none</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_biofilmmcyE4.png" /></td><td>biofilm mcyE</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_biofilmanaC5.png" /></td><td>biofilm anaC</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_biofilmcyrJ6.png" /></td><td>biofilm cyrJ</td></tr><tr><td style="text-align: center;"><img src="legend/Cyanotoxingenes_2_biofilmnone7.png" /></td><td>biofilm none</td></tr></table>': layer_Cyanotoxingenes_2,"ESRI Topo": layer_ESRITopo_1,"ESRI Gray (light)": layer_ESRIGraylight_0,}).addTo(map);
+        setBounds();
+        var mapDiv = document.getElementById('map');
+        var row = document.createElement('div');
+        row.className="row";
+        row.id="all";
+        row.style.height = "100%";
+        var col1 = document.createElement('div');
+        col1.className="col9";
+        col1.id = "mapWindow";
+        col1.style.height = "99%";
+        col1.style.width = "80%";
+        col1.style.display = "inline-block";
+        var col2 = document.createElement('div');
+        col2.className="col3";
+        col2.id = "menu";
+        col2.style.display = "inline-block";
+        mapDiv.parentNode.insertBefore(row, mapDiv);
+        document.getElementById("all").appendChild(col1);
+        document.getElementById("all").appendChild(col2);
+        col1.appendChild(mapDiv)
+        var Filters = {"Cyanotoxin genes": "str","Cyanotoxins": "str","Country": "str","Water body type": "str","Sample type": "str","Water body": "str"};
+        function filterFunc() {
+          map.eachLayer(function(lyr){
+          if ("options" in lyr && "dataVar" in lyr["options"]){
+            features = this[lyr["options"]["dataVar"]].features.slice(0);
+            try{
+              for (key in Filters){
+                keyS = key.replace(/[^a-zA-Z0-9_]/g, "")
+                if (Filters[key] == "str" || Filters[key] == "bool"){
+                  var selection = [];
+                  var options = document.getElementById("sel_" + keyS).options
+                  for (var i=0; i < options.length; i++) {
+                    if (options[i].selected) selection.push(options[i].value);
+                  }
+                    try{
+                      if (key in features[0].properties){
+                        for (i = features.length - 1;
+                          i >= 0; --i){
+                          if (selection.indexOf(
+                          features[i].properties[key])<0
+                          && selection.length>0) {
+                          features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                  }
+                }
+                if (Filters[key] == "int"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (parseInt(features[i].properties[key])
+                          < sliderVals[0]
+                          || parseInt(features[i].properties[key])
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "real"){
+                  sliderVals =  document.getElementById(
+                    "div_" + keyS).noUiSlider.get();
+                  try{
+                    if (key in features[0].properties){
+                    for (i = features.length - 1; i >= 0; --i){
+                      if (features[i].properties[key]
+                          < sliderVals[0]
+                          || features[i].properties[key]
+                          > sliderVals[1]){
+                            features.splice(i,1);
+                          }
+                        }
+                      }
+                    } catch(err){
+                    }
+                  }
+                if (Filters[key] == "date"
+                  || Filters[key] == "datetime"
+                  || Filters[key] == "time"){
+                  try{
+                    if (key in features[0].properties){
+                      HTMLkey = key.replace(/[&\/\\#,+()$~%.'":*?<>{} ]/g, '');
+                      startdate = document.getElementById("dat_" +
+                        HTMLkey + "_date1").value.replace(" ", "T");
+                      enddate = document.getElementById("dat_" +
+                        HTMLkey + "_date2").value.replace(" ", "T");
+                      for (i = features.length - 1; i >= 0; --i){
+                        if (features[i].properties[key] < startdate
+                          || features[i].properties[key] > enddate){
+                          features.splice(i,1);
+                        }
+                      }
+                    }
+                  } catch(err){
+                  }
+                }
+              }
+            } catch(err){
+            }
+          this[lyr["options"]["layerName"]].clearLayers();
+          this[lyr["options"]["layerName"]].addData(features);
+          }
+          })
+        }
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Cyanotoxingenes = document.createElement('div');
+            div_Cyanotoxingenes.id = "div_Cyanotoxingenes";
+            div_Cyanotoxingenes.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Cyanotoxingenes);
+            sel_Cyanotoxingenes = document.createElement('select');
+            sel_Cyanotoxingenes.multiple = true;
+            sel_Cyanotoxingenes.size = 4;
+            sel_Cyanotoxingenes.id = "sel_Cyanotoxingenes";
+            var Cyanotoxingenes_options_str = "<option value='' unselected></option>";
+            sel_Cyanotoxingenes.onchange = function(){filterFunc()};
+            Cyanotoxingenes_options_str  += '<option value="anaC">anaC</option>';
+            Cyanotoxingenes_options_str  += '<option value="cyrJ">cyrJ</option>';
+            Cyanotoxingenes_options_str  += '<option value="mcyE">mcyE</option>';
+            Cyanotoxingenes_options_str  += '<option value="none">none</option>';
+            sel_Cyanotoxingenes.innerHTML = Cyanotoxingenes_options_str;
+            div_Cyanotoxingenes.appendChild(sel_Cyanotoxingenes);
+            var lab_Cyanotoxingenes = document.createElement('div');
+            lab_Cyanotoxingenes.innerHTML = 'Cyanotoxin genes';
+            lab_Cyanotoxingenes.className = 'filterlabel';
+            div_Cyanotoxingenes.appendChild(lab_Cyanotoxingenes);
+            var reset_Cyanotoxingenes = document.createElement('div');
+            reset_Cyanotoxingenes.innerHTML = 'clear filter';
+            reset_Cyanotoxingenes.className = 'filterlabel';
+            reset_Cyanotoxingenes.onclick = function() {
+                var options = document.getElementById("sel_Cyanotoxingenes").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Cyanotoxingenes.appendChild(reset_Cyanotoxingenes);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Cyanotoxins = document.createElement('div');
+            div_Cyanotoxins.id = "div_Cyanotoxins";
+            div_Cyanotoxins.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Cyanotoxins);
+            sel_Cyanotoxins = document.createElement('select');
+            sel_Cyanotoxins.multiple = true;
+            sel_Cyanotoxins.size = 3;
+            sel_Cyanotoxins.id = "sel_Cyanotoxins";
+            var Cyanotoxins_options_str = "<option value='' unselected></option>";
+            sel_Cyanotoxins.onchange = function(){filterFunc()};
+            Cyanotoxins_options_str  += '<option value="ATX">ATX</option>';
+            Cyanotoxins_options_str  += '<option value="MC">MC</option>';
+            Cyanotoxins_options_str  += '<option value="none">none</option>';
+            sel_Cyanotoxins.innerHTML = Cyanotoxins_options_str;
+            div_Cyanotoxins.appendChild(sel_Cyanotoxins);
+            var lab_Cyanotoxins = document.createElement('div');
+            lab_Cyanotoxins.innerHTML = 'Cyanotoxins';
+            lab_Cyanotoxins.className = 'filterlabel';
+            div_Cyanotoxins.appendChild(lab_Cyanotoxins);
+            var reset_Cyanotoxins = document.createElement('div');
+            reset_Cyanotoxins.innerHTML = 'clear filter';
+            reset_Cyanotoxins.className = 'filterlabel';
+            reset_Cyanotoxins.onclick = function() {
+                var options = document.getElementById("sel_Cyanotoxins").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Cyanotoxins.appendChild(reset_Cyanotoxins);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Country = document.createElement('div');
+            div_Country.id = "div_Country";
+            div_Country.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Country);
+            sel_Country = document.createElement('select');
+            sel_Country.multiple = true;
+            sel_Country.size = 5;
+            sel_Country.id = "sel_Country";
+            var Country_options_str = "<option value='' unselected></option>";
+            sel_Country.onchange = function(){filterFunc()};
+            Country_options_str  += '<option value="Austria">Austria</option>';
+            Country_options_str  += '<option value="Germany">Germany</option>';
+            Country_options_str  += '<option value="Italy">Italy</option>';
+            Country_options_str  += '<option value="Slovenia">Slovenia</option>';
+            Country_options_str  += '<option value="Switzerland">Switzerland</option>';
+            sel_Country.innerHTML = Country_options_str;
+            div_Country.appendChild(sel_Country);
+            var lab_Country = document.createElement('div');
+            lab_Country.innerHTML = 'Country';
+            lab_Country.className = 'filterlabel';
+            div_Country.appendChild(lab_Country);
+            var reset_Country = document.createElement('div');
+            reset_Country.innerHTML = 'clear filter';
+            reset_Country.className = 'filterlabel';
+            reset_Country.onclick = function() {
+                var options = document.getElementById("sel_Country").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Country.appendChild(reset_Country);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Waterbodytype = document.createElement('div');
+            div_Waterbodytype.id = "div_Waterbodytype";
+            div_Waterbodytype.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Waterbodytype);
+            sel_Waterbodytype = document.createElement('select');
+            sel_Waterbodytype.multiple = true;
+            sel_Waterbodytype.size = 2;
+            sel_Waterbodytype.id = "sel_Waterbodytype";
+            var Waterbodytype_options_str = "<option value='' unselected></option>";
+            sel_Waterbodytype.onchange = function(){filterFunc()};
+            Waterbodytype_options_str  += '<option value="lake">lake</option>';
+            Waterbodytype_options_str  += '<option value="river">river</option>';
+            sel_Waterbodytype.innerHTML = Waterbodytype_options_str;
+            div_Waterbodytype.appendChild(sel_Waterbodytype);
+            var lab_Waterbodytype = document.createElement('div');
+            lab_Waterbodytype.innerHTML = 'Water body type';
+            lab_Waterbodytype.className = 'filterlabel';
+            div_Waterbodytype.appendChild(lab_Waterbodytype);
+            var reset_Waterbodytype = document.createElement('div');
+            reset_Waterbodytype.innerHTML = 'clear filter';
+            reset_Waterbodytype.className = 'filterlabel';
+            reset_Waterbodytype.onclick = function() {
+                var options = document.getElementById("sel_Waterbodytype").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Waterbodytype.appendChild(reset_Waterbodytype);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Sampletype = document.createElement('div');
+            div_Sampletype.id = "div_Sampletype";
+            div_Sampletype.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Sampletype);
+            sel_Sampletype = document.createElement('select');
+            sel_Sampletype.multiple = true;
+            sel_Sampletype.size = 2;
+            sel_Sampletype.id = "sel_Sampletype";
+            var Sampletype_options_str = "<option value='' unselected></option>";
+            sel_Sampletype.onchange = function(){filterFunc()};
+            Sampletype_options_str  += '<option value="biofilm">biofilm</option>';
+            Sampletype_options_str  += '<option value="water">water</option>';
+            sel_Sampletype.innerHTML = Sampletype_options_str;
+            div_Sampletype.appendChild(sel_Sampletype);
+            var lab_Sampletype = document.createElement('div');
+            lab_Sampletype.innerHTML = 'Sample type';
+            lab_Sampletype.className = 'filterlabel';
+            div_Sampletype.appendChild(lab_Sampletype);
+            var reset_Sampletype = document.createElement('div');
+            reset_Sampletype.innerHTML = 'clear filter';
+            reset_Sampletype.className = 'filterlabel';
+            reset_Sampletype.onclick = function() {
+                var options = document.getElementById("sel_Sampletype").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Sampletype.appendChild(reset_Sampletype);
+            document.getElementById("menu").appendChild(
+                document.createElement("div"));
+            var div_Waterbody = document.createElement('div');
+            div_Waterbody.id = "div_Waterbody";
+            div_Waterbody.className= "filterselect";
+            document.getElementById("menu").appendChild(div_Waterbody);
+            sel_Waterbody = document.createElement('select');
+            sel_Waterbody.multiple = true;
+            sel_Waterbody.size = 10;
+            sel_Waterbody.id = "sel_Waterbody";
+            var Waterbody_options_str = "<option value='' unselected></option>";
+            sel_Waterbody.onchange = function(){filterFunc()};
+            Waterbody_options_str  += '<option value="Adige">Adige</option>';
+            Waterbody_options_str  += '<option value="Ammersee">Ammersee</option>';
+            Waterbody_options_str  += '<option value="Bistrica">Bistrica</option>';
+            Waterbody_options_str  += '<option value="Bled">Bled</option>';
+            Waterbody_options_str  += '<option value="Bohinj">Bohinj</option>';
+            Waterbody_options_str  += '<option value="Caldaro">Caldaro</option>';
+            Waterbody_options_str  += '<option value="Caldonazzo">Caldonazzo</option>';
+            Waterbody_options_str  += '<option value="Como">Como</option>';
+            Waterbody_options_str  += '<option value="Corbiolo">Corbiolo</option>';
+            Waterbody_options_str  += '<option value="Faaker See">Faaker See</option>';
+            Waterbody_options_str  += '<option value="Fie allo Sciliar">Fie allo Sciliar</option>';
+            Waterbody_options_str  += '<option value="Fimon">Fimon</option>';
+            Waterbody_options_str  += '<option value="Fontane Bianche">Fontane Bianche</option>';
+            Waterbody_options_str  += '<option value="Frassino">Frassino</option>';
+            Waterbody_options_str  += '<option value="Garda">Garda</option>';
+            Waterbody_options_str  += '<option value="Glinscica">Glinscica</option>';
+            Waterbody_options_str  += '<option value="Idro">Idro</option>';
+            Waterbody_options_str  += '<option value="Iseo">Iseo</option>';
+            Waterbody_options_str  += '<option value="Koseze">Koseze</option>';
+            Waterbody_options_str  += '<option value="Lech">Lech</option>';
+            Waterbody_options_str  += '<option value="Ledro">Ledro</option>';
+            Waterbody_options_str  += '<option value="Ljubljanica">Ljubljanica</option>';
+            Waterbody_options_str  += '<option value="Lugano">Lugano</option>';
+            Waterbody_options_str  += '<option value="Lukaj">Lukaj</option>';
+            Waterbody_options_str  += '<option value="Maggiore">Maggiore</option>';
+            Waterbody_options_str  += '<option value="Mantova sup">Mantova sup</option>';
+            Waterbody_options_str  += '<option value="Mondsee">Mondsee</option>';
+            Waterbody_options_str  += '<option value="Pernica">Pernica</option>';
+            Waterbody_options_str  += '<option value="Poljanska Sora">Poljanska Sora</option>';
+            Waterbody_options_str  += '<option value="Ragogna">Ragogna</option>';
+            Waterbody_options_str  += '<option value="Restena">Restena</option>';
+            Waterbody_options_str  += '<option value="Rizana">Rizana</option>';
+            Waterbody_options_str  += '<option value="Salzach">Salzach</option>';
+            Waterbody_options_str  += '<option value="Sava">Sava</option>';
+            Waterbody_options_str  += '<option value="Schliersee">Schliersee</option>';
+            Waterbody_options_str  += '<option value="Serraia">Serraia</option>';
+            Waterbody_options_str  += '<option value="Simsee">Simsee</option>';
+            Waterbody_options_str  += '<option value="Slivnica">Slivnica</option>';
+            Waterbody_options_str  += '<option value="Soca">Soca</option>';
+            Waterbody_options_str  += '<option value="Staffelsee">Staffelsee</option>';
+            Waterbody_options_str  += '<option value="Starnberg">Starnberg</option>';
+            Waterbody_options_str  += '<option value="Steyr">Steyr</option>';
+            Waterbody_options_str  += '<option value="Tagliaamento">Tagliaamento</option>';
+            Waterbody_options_str  += '<option value="Tegernsee">Tegernsee</option>';
+            Waterbody_options_str  += '<option value="Tivoli">Tivoli</option>';
+            Waterbody_options_str  += '<option value="Varese">Varese</option>';
+            Waterbody_options_str  += '<option value="Vedeggio">Vedeggio</option>';
+            Waterbody_options_str  += '<option value="Vogrscek">Vogrscek</option>';
+            Waterbody_options_str  += '<option value="Wertach">Wertach</option>';
+            sel_Waterbody.innerHTML = Waterbody_options_str;
+            div_Waterbody.appendChild(sel_Waterbody);
+            var lab_Waterbody = document.createElement('div');
+            lab_Waterbody.innerHTML = 'Water body';
+            lab_Waterbody.className = 'filterlabel';
+            div_Waterbody.appendChild(lab_Waterbody);
+            var reset_Waterbody = document.createElement('div');
+            reset_Waterbody.innerHTML = 'clear filter';
+            reset_Waterbody.className = 'filterlabel';
+            reset_Waterbody.onclick = function() {
+                var options = document.getElementById("sel_Waterbody").options;
+                for (var i=0; i < options.length; i++) {
+                    options[i].selected = false;
+                }
+                filterFunc();
+            };
+            div_Waterbody.appendChild(reset_Waterbody);
+        </script>
+    </body>
+</html>
